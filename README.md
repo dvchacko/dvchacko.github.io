@@ -14,5 +14,11 @@ https://dvchacko.github.io/launch.html?launch=f2d9e3e0-4e08-49d9-9a90-82324ee078
 
 
 ### Standalone launch
+Launch the SMART app using the below link and the sample credentials provided at [Sandbox Test Data](https://fhir.epic.com/Documentation?docId=testpatients)
+
 https://dvchacko.github.io/launch.html?iss=https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4
-use the sample credentials provided at https://fhir.epic.com/Documentation?docId=testpatients
+
+
+
+# References
+1. [Epic Sandbox](https://fhir.epic.com) - A free resource for developers who create apps for use by patients and healthcare organizations
