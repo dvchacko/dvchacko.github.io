@@ -6,8 +6,7 @@ info:
 servers:
 - url: https://virtserver.swaggerhub.com/dvchacko/test/1.0.0-oas3
   description: SwaggerHub API Auto Mocking
-- url: http://localhost:1080/
-- url: https://localhost:1080/
+- url: http://localhost:1080/vi
 paths:
   /solaborate:
     post:
