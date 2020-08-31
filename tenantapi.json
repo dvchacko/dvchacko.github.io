@@ -29,10 +29,8 @@
                   "items": {
                     "$ref": "#/components/schemas/Tenant"
                   }
-                }
-              },
-              "example": {
-                "example_1": [
+                },
+                "example": [
                   {
                     "id": "y5kbmfbs",
                     "name": "Tenant1",
@@ -74,9 +72,7 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Tenant"
-                }
-              },
-              "example": {
+                },
                 "example": {
                   "id": "y3fzlo5q",
                   "name": "Tenant 123",
@@ -141,9 +137,7 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Tenant"
-                }
-              },
-              "example": {
+                },
                 "example": {
                   "id": "y3fzlo5q",
                   "name": "Tenant1",
