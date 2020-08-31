@@ -52,7 +52,7 @@
           "Tenant Management"
         ],
         "summary": "Create a new Tenant",
-        "description": "Create a new tenant",
+        "description": "Publishes a CREAT_NEW_TENANT event",
         "operationId": "Create-Tenant",
         "requestBody": {
           "description": "Body contains the details of the new tenant",
@@ -66,20 +66,8 @@
           "required": false
         },
         "responses": {
-          "201": {
-            "description": "New Tenant details , including tenant id",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Tenant"
-                },
-                "example": {
-                  "id": "y3fzlo5q",
-                  "name": "Tenant 123",
-                  "enterpriseUri": ""
-                }
-              }
-            }
+          "202": {
+            "description": "Accepted"
           },
           "400": {
             "description": "",
@@ -186,7 +174,7 @@
           }
         ],
         "requestBody": {
-          "description": "Provider Node details that need to be updated",
+          "description": "Publishes a UPDATE_TENANT_EVENT",
           "content": {
             "application/json": {
               "schema": {
@@ -197,12 +185,8 @@
           "required": false
         },
         "responses": {
-          "200": {
-            "description": "Tenant updated",
-            "content": {}
-          },
-          "400": {
-            "description": "Bad Request",
+          "202": {
+            "description": "Accepted",
             "content": {
               "application/json": {
                 "schema": {
@@ -240,11 +224,15 @@
     "schemas": {
       "Tenant": {
         "title": "Tenant",
-        "required": [
-          "id",
-          "name"
-        ],
         "type": "object",
+        "x-examples": {
+          "example": {
+            "id": "qwerTy84",
+            "name": "Tenant Name",
+            "enterpriseUri": "Tenant URI",
+            "callbackurl": "http://somedomain.amwell.com"
+          }
+        },
         "properties": {
           "id": {
             "type": "string",
@@ -263,13 +251,10 @@
             "description": "client callbackup to notify updates to the service"
           }
         },
-        "x-examples": {
-          "example": {
-            "id": "qwerTy84",
-            "name": "Tenant Name",
-            "enterpriseUri": "Tenant URI"
-          }
-        }
+        "required": [
+          "id",
+          "name"
+        ]
       }
     }
   }
