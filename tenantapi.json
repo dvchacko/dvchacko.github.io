@@ -1,188 +1,248 @@
-openapi: 3.0.1
-info:
-  title: TenantService
-  description: The tenant service contains a list of all American Well customers,
-    with IDs that are shared and used as references across services. It also holds
-    references to their CTE installation(s), if any, and some customer metadata. The
-    tenant service is used (can be used) by many other services, to answer questions
-    like "does this tenant id exist", "do they have a Caretalks installation and if
-    so, what is their Caretalks URI?"
-  version: "1.0"
-servers:
-- url: http://localhost:3000/api/v1/
-paths:
-  /tenant:
-    get:
-      tags:
-      - Tenant Queries
-      summary: Get All Tenants
-      description: Retrieves all tenants in the system
-      operationId: Get-All-Tenants
-      responses:
-        200:
-          description: Response contains a list of all tenants
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Tenant'
-            example:
-              example:
-              - id: y5kbmfbs
-                name: Tenant1
-                enterpriseUri: ""
-              - id: yym9rk8p
-                name: Tenant2
-                enterpriseUri: ""
-    post:
-      tags:
-      - Tenant Management
-      summary: Create a new Tenant
-      description: Create a new tenant
-      operationId: Create-Tenant
-      requestBody:
-        description: Body contains the details of the new tenant
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Tenant'
-        required: false
-      responses:
-        201:
-          description: New Tenant details , including tenant id
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Tenant'
-            example:
-              example:
-                id: y3fzlo5q
-                name: Tenant 123
-                enterpriseUri: ""
-        400:
-          description: ""
-          content: {}
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Tenant'
-            example:
-              example: {}
-        500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-      x-codegen-request-body-name: body
-  /tenant/{tenantId}:
-    get:
-      tags:
-      - Tenant Queries
-      summary: Get Details for a tenant
-      description: Retrieves details for a single tenant
-      operationId: Get-Tenant
-      parameters:
-      - name: tenantId
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: Response contains the details of the requested tenant
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Tenant'
-            example:
-              example:
-                id: y3fzlo5q
-                name: Tenant1
-                enterpriseUri: ""
-        404:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                type: object
-        503:
-          description: Service Unavailable
-          content:
-            application/json:
-              schema:
-                type: object
-    put:
-      tags:
-      - Tenant Management
-      summary: Update Tenant Details
-      description: Update Tenant Details
-      operationId: put-tenant-tenantId
-      parameters:
-      - name: tenantId
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        description: Provider Node details that need to be updated
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Tenant'
-        required: false
-      responses:
-        200:
-          description: Tenant updated
-          content: {}
-        400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-        404:
-          description: Tenant Not Found
-          content:
-            application/json:
-              schema:
-                type: object
-        500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-      x-codegen-request-body-name: body
-components:
-  schemas:
-    Tenant:
-      title: Tenant
-      required:
-      - id
-      - name
-      type: object
-      properties:
-        id:
-          type: string
-          description: 'A short code unique URL-safe code that represents the tenant.
-            Must be an upper-case valid identifier-like string, matching this regex:  [A-Z][A-Z0-9]{3,9}
-            . This key is unique and can not change. It is the same key as the Installation
-            ID used in Caretalks.'
-        name:
-          type: string
-          description: A human friendly name for the tenant, not strictly speaking
-            unique, but generally soName of the tenant
-        enterpriseUri:
-          type: string
-          description: ' (External) URI that identifies the tenant''s caretalks enterprise
-            (may be null; as we want to support tenant records without any legacy
-            enterprise, though this may reduce their supportable features.'
-      x-examples:
-        example:
-          id: qwerTy84
-          name: Tenant Name
-          enterpriseUri: Tenant URI
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "TenantService",
+    "version": "1.0",
+    "description": "The tenant service contains a list of all American Well customers, with IDs that are shared and used as references across services. It also holds references to their CTE installation(s), if any, and some customer metadata. The tenant service is used (can be used) by many other services, to answer questions like \"does this tenant id exist\", \"do they have a Caretalks installation and if so, what is their Caretalks URI?\""
+  },
+  "host": "localhost:3000/api/v1",
+  "schemes": [
+    "http"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "paths": {
+    "/tenant": {
+      "get": {
+        "summary": "Get All Tenants",
+        "tags": [
+          "Tenant Queries"
+        ],
+        "responses": {
+          "200": {
+            "description": "Response contains a list of all tenants",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Tenant"
+              }
+            },
+            "examples": {
+              "example": [
+                {
+                  "id": "y5kbmfbs",
+                  "name": "Tenant1",
+                  "enterpriseUri": ""
+                },
+                {
+                  "id": "yym9rk8p",
+                  "name": "Tenant2",
+                  "enterpriseUri": ""
+                }
+              ]
+            }
+          }
+        },
+        "operationId": "Get-All-Tenants",
+        "description": "Retrieves all tenants in the system"
+      },
+      "post": {
+        "summary": "Create a new Tenant",
+        "operationId": "Create-Tenant",
+        "responses": {
+          "201": {
+            "description": "New Tenant details , including tenant id",
+            "schema": {
+              "$ref": "#/definitions/Tenant"
+            },
+            "examples": {
+              "example": {
+                "id": "y3fzlo5q",
+                "name": "Tenant 123",
+                "enterpriseUri": ""
+              }
+            }
+          },
+          "400": {
+            "description": ""
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Tenant"
+            },
+            "examples": {
+              "example": {}
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        },
+        "description": "Create a new tenant",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Tenant"
+            },
+            "description": "Body contains the details of the new tenant",
+            "x-examples": {
+              "example": {
+                "name": "Tenant 123",
+                "enterpriseUri": "http://somedomain",
+                "callbackURI": "http://clienturl"
+              }
+            }
+          }
+        ],
+        "tags": [
+          "Tenant Management"
+        ]
+      },
+      "parameters": []
+    },
+    "/tenant/{tenantId}": {
+      "parameters": [
+        {
+          "type": "string",
+          "name": "tenantId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Get Details for a tenant",
+        "tags": [
+          "Tenant Queries"
+        ],
+        "responses": {
+          "200": {
+            "description": "Response contains the details of the requested tenant",
+            "schema": {
+              "$ref": "#/definitions/Tenant"
+            },
+            "examples": {
+              "example": {
+                "id": "y3fzlo5q",
+                "name": "Tenant1",
+                "enterpriseUri": ""
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        },
+        "operationId": "Get-Tenant",
+        "description": "Retrieves details for a single tenant"
+      },
+      "put": {
+        "summary": "Update Tenant Details",
+        "operationId": "put-tenant-tenantId",
+        "responses": {
+          "200": {
+            "description": "Tenant updated"
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "404": {
+            "description": "Tenant Not Found",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        },
+        "description": "Update Tenant Details",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Tenant"
+            },
+            "x-examples": {
+              "example": {
+                "name": "Tenant1",
+                "enterpriseUri": " ",
+                "callBackURI": ""
+              }
+            },
+            "description": "Provider Node details that need to be updated"
+          }
+        ],
+        "tags": [
+          "Tenant Management"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "Tenant": {
+      "title": "Tenant",
+      "type": "object",
+      "x-examples": {
+        "example": {
+          "id": "qwerTy84",
+          "name": "Tenant Name",
+          "enterpriseUri": "Tenant URI"
+        }
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "A short code unique URL-safe code that represents the tenant. Must be an upper-case valid identifier-like string, matching this regex:  [A-Z][A-Z0-9]{3,9} . This key is unique and can not change. It is the same key as the Installation ID used in Caretalks."
+        },
+        "name": {
+          "type": "string",
+          "description": "A human friendly name for the tenant, not strictly speaking unique, but generally soName of the tenant"
+        },
+        "enterpriseUri": {
+          "type": "string",
+          "description": " (External) URI that identifies the tenant's caretalks enterprise (may be null; as we want to support tenant records without any legacy enterprise, though this may reduce their supportable features."
+        },
+        "callbackurl": {
+          "type": "string",
+          "description": "client callbackup to notify updates to the service"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    }
+  }
+}
