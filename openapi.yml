@@ -1,265 +1,388 @@
-openapi: 3.0.1
-info:
-  title: HomeTV API
-  description: 'HomeTV API '
-  version: 1.0.0-oas3
-servers:
-- url: https://virtserver.swaggerhub.com/dvchacko/test/1.0.0-oas3
-  description: SwaggerHub API Auto Mocking
-- url: http://localhost:1080/v1
-paths:
-  /solaborate:
-    post:
-      tags: []
-      summary: Get Solaborate URL
-      description: Given a provider's details, retrieve a Solaborate url for that
-        provider
-      operationId: GET Solaborate url
-      requestBody:
-        description: Provider details required to map a provider to thier solaborate
-          node
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProviderNode'
-        required: false
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseEntity'
-            Success:
-              example:
-                status: success
-                data:
-                  solaborateUrl: http://www.solaborate.com?token=QWQWEQEQEWQE@FSFSDF
-            Error:
-              example:
-                status: error
-                message: Internal error. Please try again
-        "404":
-          description: Provider not found in Home TV database
-          content:
-            application/json:
-              schema:
-                type: object
-        "502":
-          description: Call to Solaborate failed
-          content:
-            application/json:
-              schema:
-                type: object
-      x-codegen-request-body-name: body
-  /providerNode:
-    get:
-      tags: []
-      summary: Get All Provider Node mappings
-      description: Retrieve all the provider node mappings available in Home TV Service
-      operationId: GetAllProviderNodes
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseEntity'
-              examples:
-                example:
-                  value:
-                    status: success
-                    message: string
-                    data:
-                    - id: "123"
-                      firstName: John
-                      secondName: Doe
-                    - id: "124"
-                      firstName: Jane
-                      secondName: Doe
-  /providerNode/{providerId}:
-    get:
-      tags: []
-      summary: Get node mapping for provider
-      description: Get the solaborate nodes for the provider
-      operationId: GetSolaborateNodeForProvider
-      parameters:
-      - name: providerId
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseEntity'
-    put:
-      description: Update the node mapping for this provider
-      operationId: UpdateProviderNodeMapping
-      parameters:
-      - name: providerId
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProviderNode'
-        required: false
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseEntity'
-            success:
-              example:
-                status: success
-            failure:
-              example:
-                status: error
-                message: Internal error. Please try again
-      x-codegen-request-body-name: body
-    post:
-      description: Create a node mapping between the provider and solaborate node
-      operationId: CreateProviderNodeMapping
-      parameters:
-      - name: providerId
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProviderNode'
-        required: false
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseEntity'
-            success:
-              example:
-                status: success
-            failure:
-              example:
-                status: error
-                message: Internal error. Please try again
-      x-codegen-request-body-name: body
-    delete:
-      description: Delete the node mapping for this provider
-      operationId: DeleteProviderNodeMapping
-      parameters:
-      - name: providerId
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content: {}
-components:
-  schemas:
-    Solaborate:
-      title: Solaborate
-      type: object
-      properties:
-        solaborateUrl:
-          type: string
-      description: Enttity representing a Solaborate object
-      x-examples:
-        example:
-          solaborateUrl: http://www.solaborate.com?token=QWQWEQEQEWQE@FSFSDF
-    ResponseEntity:
-      title: ResponseEntity
-      required:
-      - status
-      type: object
-      properties:
-        status:
-          type: string
-          description: |
-            Status of the call. Valid values are success or error
-          enum:
-          - success
-          - error
-        message:
-          type: string
-        data:
-          oneOf:
-          - $ref: '#/components/schemas/Solaborate'
-          - type: array
-            items:
-              $ref: '#/components/schemas/ProviderNode'
-      description: Response entity containing status of a service call and data retrieved
-      x-examples:
-        success:
-          status: success
-          data:
-            solaborateUrl: http://www.solaborate.com?token=QWQWEQEQEWQE@FSFSDF
-        failure:
-          status: error
-          message: Internal error. Please try again
-    ProviderNode:
-      title: Provider
-      required:
-      - departmentId
-      - firstName
-      - id
-      - lastName
-      - nodeId
-      - title
-      type: object
-      properties:
-        id:
-          type: string
-          description: The id of the provider
-        departmentId:
-          type: array
-          description: Department Id of the provider
-          items:
-            type: string
-        firstName:
-          type: string
-          description: First name of the provider
-        lastName:
-          type: string
-          description: Last name of the provider
-        title:
-          type: string
-          description: Provider title
-        nodeId:
-          type: string
-          description: Solaborate Node id for the provider
-      description: Entity representing a provider node mapping in Home TV
-      x-examples:
-        example:
-          id: "1"
-          departartmentId:
-          - "65"
-          - "12"
-          - "44"
-          - "77"
-          firstName: John
-          lastName: Doe
-          title: title
-          nodeId: "390"
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "HomeTV API",
+    "description": "HomeTV API ",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/homeTV/v1/"
+    }
+  ],
+  "paths": {
+    "/solaborate": {
+      "post": {
+        "tags": [],
+        "summary": "Get Solaborate URL",
+        "description": "Given a provider's details, retrieve a Solaborate url for that provider",
+        "operationId": "GET Solaborate url",
+        "requestBody": {
+          "description": "Provider details required to map a provider to thier solaborate node",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProviderNode"
+              },
+              "examples": {
+                "example-1": {}
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseEntity"
+                }
+              },
+              "Success": {
+                "example": {
+                  "status": "success",
+                  "data": {
+                    "solaborateUrl": "http://www.solaborate.com?token=QWQWEQEQEWQE@FSFSDF"
+                  }
+                }
+              },
+              "Error": {
+                "example": {
+                  "status": "error",
+                  "message": "Internal error. Please try again"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Provider not found in Home TV database",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Call to Solaborate failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/providerNode": {
+      "get": {
+        "tags": [],
+        "summary": "Get All Provider Node mappings",
+        "description": "Retrieve all the provider node mappings available in Home TV Service",
+        "operationId": "GetAllProviderNodes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseEntity"
+                }
+              },
+              "example-1": {
+                "example": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/providerNode/{providerId}": {
+      "get": {
+        "tags": [],
+        "summary": "Get node mapping for provider",
+        "description": "Get the solaborate nodes for the provider",
+        "operationId": "GetSolaborateNodeForProvider",
+        "parameters": [
+          {
+            "name": "providerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseEntity"
+                }
+              },
+              "example-1": {
+                "example": {}
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Update the node mapping for this provider",
+        "operationId": "UpdateProviderNodeMapping",
+        "parameters": [
+          {
+            "name": "providerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProviderNode"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseEntity"
+                }
+              },
+              "success": {
+                "example": {
+                  "status": "success"
+                }
+              },
+              "failure": {
+                "example": {
+                  "status": "error",
+                  "message": "Internal error. Please try again"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      },
+      "post": {
+        "description": "Create a node mapping between the provider and solaborate node",
+        "operationId": "CreateProviderNodeMapping",
+        "parameters": [
+          {
+            "name": "providerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProviderNode"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseEntity"
+                }
+              },
+              "success": {
+                "example": {
+                  "status": "success"
+                }
+              },
+              "failure": {
+                "example": {
+                  "status": "error",
+                  "message": "Internal error. Please try again"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      },
+      "delete": {
+        "description": "Delete the node mapping for this provider",
+        "operationId": "DeleteProviderNodeMapping",
+        "parameters": [
+          {
+            "name": "providerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Solaborate": {
+        "title": "Solaborate",
+        "type": "object",
+        "properties": {
+          "solaborateUrl": {
+            "type": "string"
+          }
+        },
+        "description": "Enttity representing a Solaborate object",
+        "x-examples": {
+          "example": {
+            "solaborateUrl": "http://www.solaborate.com?token=QWQWEQEQEWQE@FSFSDF"
+          }
+        }
+      },
+      "ResponseEntity": {
+        "title": "ResponseEntity",
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Status of the call. Valid values are success or error\n",
+            "enum": [
+              "success",
+              "error"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        },
+        "description": "Response entity containing status of a service call and data retrieved",
+        "x-examples": {
+          "success": {
+            "status": "success",
+            "data": {
+              "solaborateUrl": "http://www.solaborate.com?token=QWQWEQEQEWQE@FSFSDF"
+            }
+          },
+          "failure": {
+            "status": "error",
+            "message": "Internal error. Please try again"
+          }
+        }
+      },
+      "ProviderNode": {
+        "title": "Provider",
+        "required": [
+          "departments",
+          "firstName",
+          "id",
+          "lastName",
+          "nodeId",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the provider"
+          },
+          "departments": {
+            "type": "array",
+            "description": "Department Id of the provider",
+            "items": {
+              "$ref": "#/components/schemas/ProviderDepartment"
+            }
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First name of the provider"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last name of the provider"
+          },
+          "title": {
+            "type": "string",
+            "description": "Provider title"
+          },
+          "nodeId": {
+            "type": "string",
+            "description": "Solaborate Node id for the provider"
+          },
+          "profilePicture": {
+            "type": "string",
+            "description": "Profile picture for the provider. This can either be a url string or a base64 encoded image"
+          }
+        },
+        "description": "Entity representing a provider node mapping in Home TV",
+        "x-examples": {
+          "example": {
+            "id": "1",
+            "departartmentId": [
+              "65",
+              "12",
+              "44",
+              "77"
+            ],
+            "firstName": "John",
+            "lastName": "Doe",
+            "title": "title",
+            "nodeId": "390",
+            "profilePicture": ""
+          },
+          "example-2": {}
+        }
+      },
+      "ProviderDepartment": {
+        "title": "ProviderDepartment",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Department Id"
+          },
+          "name": {
+            "type": "string",
+            "description": "Department Name"
+          }
+        }
+      }
+    }
+  }
+}
