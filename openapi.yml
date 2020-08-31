@@ -25,7 +25,19 @@
                 "$ref": "#/components/schemas/ProviderNode"
               },
               "examples": {
-                "example-1": {}
+                "example-1": {
+                  "value": {
+                    "departmentId": [
+                      "1",
+                      "3>"
+                    ],
+                    "firstName": "John",
+                    "id": "123",
+                    "lastName": "Doe",
+                    "nodeId": "34567",
+                    "title": "Speciality1"
+                  }
+                }
               }
             }
           },
@@ -38,6 +50,17 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ResponseEntity"
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "data": {
+                        "solaborateUrl": "http://solaborate.com"
+                      },
+                      "message": "Cum dolores consequatur est dignissimos. Maxime cum sed aut sit beatae molestiae.",
+                      "status": "success"
+                    }
+                  }
                 }
               },
               "Success": {
@@ -258,15 +281,15 @@
       "Solaborate": {
         "title": "Solaborate",
         "type": "object",
-        "properties": {
-          "solaborateUrl": {
-            "type": "string"
-          }
-        },
         "description": "Enttity representing a Solaborate object",
         "x-examples": {
           "example": {
             "solaborateUrl": "http://www.solaborate.com?token=QWQWEQEQEWQE@FSFSDF"
+          }
+        },
+        "properties": {
+          "solaborateUrl": {
+            "type": "string"
           }
         }
       },
