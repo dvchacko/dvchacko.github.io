@@ -1,0 +1,1 @@
+docker run -p 4010:4010 --init -P stoplight/prism:3 mock -h 0.0.0.0 https://raw.githubusercontent.com/dvchacko/dvchacko.github.io/master/tenantapi.yml
