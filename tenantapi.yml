@@ -163,5 +163,4 @@ components:
           type: string
           description: client callbackup to notify updates to the service
       required:
-        - id
         - name
