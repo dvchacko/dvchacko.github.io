@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-     "url": "http://localhost:3000/api/"
+      "url": "http://127.0.0.1:3100"
     }
   ],
   "paths": {
@@ -45,6 +45,9 @@
                 }
               }
             }
+          },
+          "201": {
+            "description": "Returns back the Solaborate url for this provider"
           },
           "404": {
             "description": "Provider not found in Home TV database",
@@ -239,7 +242,8 @@
                 }
               }
             }
-          }
+          },
+          "description": "JSON entity containing the provider mappings"
         }
       },
       "delete": {
