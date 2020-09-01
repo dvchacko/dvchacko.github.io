@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://127.0.0.1:3100/api"
+      "url": "http://127.0.0.1:3100"
     }
   ],
   "paths": {
@@ -115,6 +115,7 @@
       "parameters": [],
       "post": {
         "summary": "",
+		"description": "Accept the response",
         "operationId": "post-homeTV-v1-providerNode",
         "responses": {
           "201": {
@@ -248,6 +249,7 @@
       },
       "delete": {
         "summary": "",
+		"description": "Delete the provider",
         "operationId": "delete-homeTV-v1-providerNode-providerId",
         "responses": {
           "200": {
