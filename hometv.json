@@ -1,0 +1,388 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "HomeTV API",
+    "description": "HomeTV API ",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+     "url": "http://localhost:3000/api/"
+    }
+  ],
+  "paths": {
+    "/homeTV/v1/solaborate": {
+      "post": {
+        "tags": [],
+        "summary": "Get Solaborate URL",
+        "description": "Given a provider's details, retrieve a Solaborate url for that provider",
+        "operationId": "GET Solaborate url",
+        "requestBody": {
+          "description": "Provider details required to map a provider to thier solaborate node",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProviderNode"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseEntity"
+                },
+                "example": {
+                  "data": {
+                    "solaborateUrl": "http://solaborate.com"
+                  },
+                  "message": "Successfully generated the Solaborate url",
+                  "status": "success"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Provider not found in Home TV database",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Call to Solaborate failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      },
+      "parameters": []
+    },
+    "/homeTV/v1/providerNode": {
+      "get": {
+        "tags": [],
+        "summary": "Get All Provider Node mappings",
+        "description": "Retrieve all the provider node mappings available in Home TV Service",
+        "operationId": "GetAllProviderNodes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseEntity"
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "status": "success",
+                      "message": "Successfully retrieved list of provider node configurations",
+                      "data": [
+                        {
+                          "id": "123",
+                          "department": [
+                            {
+                              "id": "123",
+                              "name": "department name"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters": [],
+      "post": {
+        "summary": "",
+        "operationId": "post-homeTV-v1-providerNode",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProviderNode"
+              },
+              "examples": {
+                "example-1": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/homeTV/v1/providerNode/{providerId}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "providerId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Your GET endpoint",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseEntity"
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "status": "success",
+                      "message": "Successfully retrieved list of provider node configurations",
+                      "data": {
+                        "id": "123",
+                        "department": [
+                          {
+                            "id": "123",
+                            "name": "department name"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseEntity"
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "status": "success",
+                      "message": "Successfully retrieved list of provider node configurations",
+                      "data": {
+                        "id": "123",
+                        "department": [
+                          {
+                            "id": "123",
+                            "name": "department name"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-homeTV-v1-providerNode-providerId"
+      },
+      "put": {
+        "summary": "",
+        "operationId": "put-homeTV-v1-providerNode-providerId",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProviderNode"
+              },
+              "examples": {
+                "example-1": {
+                  "value": {
+                    "id": "123",
+                    "name": "Provider Name",
+                    "firstName": "Provider First Name",
+                    "lastName": "Provider Last Name",
+                    "title": "Provider Title",
+                    "department": [
+                      {
+                        "id": "Department id1",
+                        "name": "Department name"
+                      },
+                      {
+                        "id": "Department id2",
+                        "name": "Department name"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "",
+        "operationId": "delete-homeTV-v1-providerNode-providerId",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Solaborate": {
+        "title": "Solaborate",
+        "type": "object",
+        "description": "Enttity representing a Solaborate object",
+        "x-examples": {
+          "example": {
+            "solaborateUrl": "http://www.solaborate.com?token=QWQWEQEQEWQE@FSFSDF"
+          }
+        },
+        "properties": {
+          "solaborateUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "ResponseEntity": {
+        "title": "ResponseEntity",
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Status of the call. Valid values are success or error\n",
+            "enum": [
+              "success",
+              "error"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        },
+        "description": "Response entity containing status of a service call and data retrieved",
+        "x-examples": {
+          "success": {
+            "status": "success",
+            "data": {
+              "solaborateUrl": "http://www.solaborate.com?token=QWQWEQEQEWQE@FSFSDF"
+            }
+          },
+          "failure": {
+            "status": "error",
+            "message": "Internal error. Please try again"
+          }
+        }
+      },
+      "ProviderNode": {
+        "title": "Provider",
+        "required": [
+          "departments",
+          "firstName",
+          "id",
+          "lastName",
+          "nodeId",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the provider"
+          },
+          "departments": {
+            "type": "array",
+            "description": "Department Id of the provider",
+            "items": {
+              "$ref": "#/components/schemas/ProviderDepartment"
+            }
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First name of the provider"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last name of the provider"
+          },
+          "title": {
+            "type": "string",
+            "description": "Provider title"
+          },
+          "nodeId": {
+            "type": "string",
+            "description": "Solaborate Node id for the provider"
+          },
+          "profilePicture": {
+            "type": "string",
+            "description": "Profile picture for the provider. This can either be a url string or a base64 encoded image"
+          }
+        },
+        "description": "Entity representing a provider node mapping in Home TV",
+        "x-examples": {
+          "example": {
+            "id": "1",
+            "departartmentId": [
+              "65",
+              "12",
+              "44",
+              "77"
+            ],
+            "firstName": "John",
+            "lastName": "Doe",
+            "title": "title",
+            "nodeId": "390",
+            "profilePicture": ""
+          },
+          "example-2": {}
+        }
+      },
+      "ProviderDepartment": {
+        "title": "ProviderDepartment",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Department Id"
+          },
+          "name": {
+            "type": "string",
+            "description": "Department Name"
+          }
+        }
+      }
+    }
+  }
+}
