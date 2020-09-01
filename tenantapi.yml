@@ -1,0 +1,167 @@
+openapi: 3.0.1
+info:
+  title: TenantService
+  description: 'The tenant service contains a list of all American Well customers, with IDs that are shared and used as references across services. It also holds references to their CTE installation(s), if any, and some customer metadata. The tenant service is used (can be used) by many other services, to answer questions like "does this tenant id exist", "do they have a Caretalks installation and if so, what is their Caretalks URI?"'
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000/api/v1/'
+paths:
+  /tenant:
+    get:
+      tags:
+        - Tenant Queries
+      summary: Get All Tenants
+      description: Retrieves all tenants in the system
+      operationId: Get-All-Tenants
+      responses:
+        '200':
+          description: Response contains a list of all tenants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tenant'
+              example:
+                - id: y5kbmfbs
+                  name: Tenant1
+                  enterpriseUri: ''
+                - id: yym9rk8p
+                  name: Tenant2
+                  enterpriseUri: ''
+    post:
+      tags:
+        - Tenant Management
+      summary: Create a new Tenant
+      description: Publishes a CREAT_NEW_TENANT event
+      operationId: Create-Tenant
+      requestBody:
+        description: Body contains the details of the new tenant
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tenant'
+        required: false
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: ''
+          content: {}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+            example:
+              example: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: body
+  '/tenant/{tenantId}':
+    get:
+      tags:
+        - Tenant Queries
+      summary: Get Details for a tenant
+      description: Retrieves details for a single tenant
+      operationId: Get-Tenant
+      parameters:
+        - name: tenantId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response contains the details of the requested tenant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+              example:
+                id: y3fzlo5q
+                name: Tenant1
+                enterpriseUri: ''
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - Tenant Management
+      summary: Update Tenant Details
+      description: Update Tenant Details
+      operationId: put-tenant-tenantId
+      parameters:
+        - name: tenantId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Publishes a UPDATE_TENANT_EVENT
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tenant'
+        required: false
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Tenant Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+      x-codegen-request-body-name: body
+components:
+  schemas:
+    Tenant:
+      title: Tenant
+      type: object
+      x-examples:
+        example:
+          id: qwerTy84
+          name: Tenant Name
+          enterpriseUri: Tenant URI
+          callbackurl: 'http://somedomain.amwell.com'
+      properties:
+        id:
+          type: string
+          description: 'A short code unique URL-safe code that represents the tenant. Must be an upper-case valid identifier-like string, matching this regex:  [A-Z][A-Z0-9]{3,9} . This key is unique and can not change. It is the same key as the Installation ID used in Caretalks.'
+        name:
+          type: string
+          description: 'A human friendly name for the tenant, not strictly speaking unique, but generally soName of the tenant'
+        enterpriseUri:
+          type: string
+          description: ' (External) URI that identifies the tenant''s caretalks enterprise (may be null; as we want to support tenant records without any legacy enterprise, though this may reduce their supportable features.'
+        callbackurl:
+          type: string
+          description: client callbackup to notify updates to the service
+      required:
+        - id
+        - name
