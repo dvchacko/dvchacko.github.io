@@ -6,11 +6,11 @@ info:
 servers:
   - url: 'http://127.0.0.1:3100/api'
 paths:
-  /homeTV/v1/solaborate:
+  /api/v1/homeTV/solaborate:
     post:
       tags: []
       summary: Get Solaborate URL
-      description: 'Given a provider''s details, retrieve a Solaborate url for that provider'
+      description: "Given a provider's details, create a Solaborate url for that provider"
       operationId: GET Solaborate url
       requestBody:
         description: Provider details required to map a provider to thier solaborate node
@@ -47,7 +47,7 @@ paths:
                 type: object
       x-codegen-request-body-name: body
     parameters: []
-  /homeTV/v1/providerNode:
+  /api/v1/homeTV/providerNode:
     get:
       tags: []
       summary: Get All Provider Node mappings
@@ -84,7 +84,7 @@ paths:
               $ref: '#/components/schemas/ProviderNode'
             examples:
               example-1: {}
-  '/homeTV/v1/providerNode/{providerId}':
+  '/api/v1/homeTV/providerNode/{providerId}':
     parameters:
       - schema:
           type: string
@@ -97,21 +97,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseEntity'
-              examples:
-                example-1:
-                  value:
-                    status: success
-                    message: Successfully retrieved list of provider node configurations
-                    data:
-                      id: '123'
-                      department:
-                        - id: '123'
-                          name: department name
-        '':
           content:
             application/json:
               schema:
@@ -198,38 +183,7 @@ components:
           message: Internal error. Please try again
     ProviderNode:
       title: Provider
-      required:
-        - departments
-        - firstName
-        - id
-        - lastName
-        - nodeId
-        - title
       type: object
-      properties:
-        id:
-          type: string
-          description: The id of the provider
-        departments:
-          type: array
-          description: Department Id of the provider
-          items:
-            $ref: '#/components/schemas/ProviderDepartment'
-        firstName:
-          type: string
-          description: First name of the provider
-        lastName:
-          type: string
-          description: Last name of the provider
-        title:
-          type: string
-          description: Provider title
-        nodeId:
-          type: string
-          description: Solaborate Node id for the provider
-        profilePicture:
-          type: string
-          description: Profile picture for the provider. This can either be a url string or a base64 encoded image
       description: Entity representing a provider node mapping in Home TV
       x-examples:
         example:
@@ -245,13 +199,28 @@ components:
           nodeId: '390'
           profilePicture: ''
         example-2: {}
-    ProviderDepartment:
-      title: ProviderDepartment
-      type: object
       properties:
         id:
           type: string
-          description: Department Id
-        name:
+          description: The id of the provider
+        firstName:
           type: string
-          description: Department Name
+          description: First name of the provider
+        lastName:
+          type: string
+          description: Last name of the provider
+        title:
+          type: string
+          description: Provider title
+        nodeId:
+          type: string
+          description: Solaborate Node id for the provider
+        profilePicture:
+          type: string
+          description: Profile picture for the provider. This can either be a url string or a base64 encoded image
+      required:
+        - id
+        - firstName
+        - lastName
+        - title
+        - nodeId
