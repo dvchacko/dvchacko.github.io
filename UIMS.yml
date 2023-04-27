@@ -1,0 +1,450 @@
+openapi: 3.0.3
+info:
+  title: User Identity Management API
+  description: |-
+    The User Identity Management API helps us to identify an user in Converge. An user might be identified by various identifiers such as email, mrn, ssn , npi etc. A single user might have multiple identifiers (email and mrn)
+
+    This service is respoonsbile for uniquely identifying an user in Converge using identifier systems.
+
+    Identifier systems give context to an identifier. for e.g an identifier with a value of "34583" has no meeaning unless we associate an identifier system to it. So an identifier with a value of "34583" and an identifier system of "https://example/com/mrn tells us that "34583" is the MRN of the user
+  version: 1.1.0
+tags:
+  - name: external
+    description: Calls meant to be accessed publicly
+paths:
+  /api/v1/practitioner:
+    post:
+      summary: Create User Profile for Practitioner in CDR
+      description: Check if user profile for Practitioner exists in CDR and create one if not
+      tags:
+        - external
+      operationId: identifyPractitioner
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: User email
+                  example: john.doe@mail.com
+                firstName:
+                  type: string
+                  description: User first name
+                  example: John
+                lastName:
+                  type: string
+                  description: User last name
+                  example: Doe
+                identitySystem:
+                  type: string
+                  description: Identity System used to lookup and identify the user in the CDR
+                  example: 'https://epicsystems.com/npi'
+                identifierSystem:
+                  type: string
+                  description: Unique string to identify user in Identity System
+                  example: e31790e7-f971-4abe-ba1c-6163261378ae
+                tenant:
+                  type: string
+                  description: Tenant name
+                  example: AMWL
+              required:
+                - identitySystem
+                - identifierSystem
+                - tenant
+      responses:
+        '200':
+          description: Successful check and optional creation of user profile in CDR
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cdrId:
+                    type: string
+        '400':
+          description: Request contains invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Request does not have a valid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/patient:
+    post:
+      summary: Create User Profile for Patient in CDR
+      description: Check if user profile for Patient exists in CDR and create one if not
+      tags:
+        - external
+      operationId: identifyPatient
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  description: User first name
+                  example: John
+                lastName:
+                  type: string
+                  description: User last name
+                  example: Doe
+                identitySystem:
+                  type: string
+                  description: Identity System used to lookup and identify the user in the CDR
+                  example: 'https://converge.amwell.system/ehr/ehr-testehr'
+                identifierSystem:
+                  type: string
+                  description: Unique string to identify user in Identity System
+                  example: MY-MRN-12345
+                tenant:
+                  type: string
+                  description: Tenant ID (a.k.a. Tenant Key) indicates which tenant controls access to the resulting patient record
+              required:
+                - identitySystem
+                - identifierSystem
+                - tenant
+      responses:
+        '200':
+          description: Successful check and optional creation of user profile in CDR
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cdrId:
+                    type: string
+        '400':
+          description: Request contains invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Request does not have a valid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/patient/search-duplicates:
+    post:
+      summary: Searches for duplicated patients' profiles in CDR
+      description: Check for duplicated user profiles in CDR. Returns it's masked email.
+      tags:
+        - external
+      operationId: identifyDuplicatedPatients
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  description: User first name
+                  example: John
+                lastName:
+                  type: string
+                  description: User last name
+                  example: Doe
+                id:
+                  type: string
+                  description: User CDR Id
+                  example: c7cfa999-abc4-4068-8f14-aa7f9cf2f415
+                middleName:
+                  type: string
+                  description: User middle initials
+                  example: JD
+                preferredFirstName:
+                  type: string
+                  description: User preferred first name
+                  example: Deer
+                birthSex:
+                  type: string
+                  description: User birthe sex
+                  example: male
+                gender:
+                  type: string
+                  description: User gender
+                  example: female
+                dateOfBirth:
+                  type: string
+                  description: User birthe date
+                  example: 1996-12-27'
+                phoneNumber:
+                  type: string
+                  description: User phone
+                  example: '19728852561'
+                tenant:
+                  type: string
+                  description: Tenant ID (a.k.a. Tenant Key) indicates which tenant controls access to the resulting patient record
+                  example: AMWL
+                address.apt:
+                  type: string
+                  description: User's address building nr.
+                  example: 65b
+                address.street:
+                  type: string
+                  description: User's address street
+                  example: Fleet St.
+                address.state:
+                  type: string
+                  description: User's address state
+                  example: NY
+                address.postalCode:
+                  type: string
+                  description: User's address postal code
+                  example: '10002'
+              required:
+                - tenant
+                - firstName
+                - lastName
+                - dateOfBirth
+      responses:
+        '200':
+          description: Successfully return the result of an operation (array with duplicates or empty array if not found)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  duplicates:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PatientDuplicationResponse'
+        '400':
+          description: Request contains invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Request does not have a valid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/api/v1/tenant/{tenantId}/identifierSystem':
+    parameters:
+      - schema:
+          type: string
+        name: tenantId
+        in: path
+        required: true
+    get:
+      summary: Get All identifierSystem Systems defined for a tenant
+      operationId: get-All-identifierSystems
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  x-stoplight:
+                    id: m9oxupgbncwkb
+                  $ref: '#/components/schemas/identifierSystem'
+      tags:
+        - identifierSystem
+    post:
+      summary: Create an identifierSystem System
+      operationId: post-api-v1-tenant-tenantId-identifierSystem
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/identifierSystem'
+      tags:
+        - identifierSystem
+  '/api/v1/tenant/{tenantId}/identifierSystem/{identifierSystemId}':
+    parameters:
+      - schema:
+          type: string
+        name: tenantId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: identifierSystemId
+        in: path
+        required: true
+    get:
+      summary: Get identifierSystem System By Id
+      operationId: get-api-v1-tenant-tenantId-identifierSystem
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/identifierSystem'
+      tags:
+        - identifierSystem
+    put:
+      summary: Update an identifierSystem System
+      operationId: put-api-v1-tenant-tenantId-identifierSystem-identifierSystemId
+      responses:
+        '200':
+          description: OK
+      tags:
+        - identifierSystem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/identifierSystem'
+    delete:
+      summary: Delete an identifierSystem System
+      operationId: delete-api-v1-tenant-tenantId-identifierSystem-identifierSystemId
+      responses:
+        '200':
+          description: OK
+      tags:
+        - identifierSystem
+  '/api/v1/tenant/{tenantId}/identifierSystem/key/{keyId}':
+    parameters:
+      - schema:
+          type: string
+        name: tenantId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: keyId
+        in: path
+        required: true
+    get:
+      summary: Get identifierSystem System By Key
+      operationId: get-identifierSystem-System-by-Id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/identifierSystem'
+      tags:
+        - identifierSystem
+components:
+  schemas:
+    PatientDuplicationResponse:
+      type: object
+      properties:
+        email:
+          type: string
+    ErrorResponse:
+      type: object
+      x-internal: false
+      properties:
+        error:
+          type: string
+      title: ErrorResponse
+    identifierSystem:
+      type: object
+      x-stoplight:
+        id: af073qmvb4sei
+      x-internal: false
+      title: IdentifierSystem
+      description: |-
+        Identifer System provides information about the type of an identifier. 
+        for e.g an id with a value of "12398476" and an identifier system of https://example.com/mrn tells us that 12398476 is the MRN of an user
+
+        Note: Not every External Identifer System would have an Internal Identifier System.
+      x-examples:
+        Example 1:
+          id: 8497a0cf-1a0e-49b2-9091-acf6cc3db907
+          key: WAL-MRN
+          system: 'https://example.com/mrn'
+          type:
+            type: EXTERNAL
+          tenantId: WAL
+          internalidentifierSystem:
+            id: 7197e8e1-720f-46f7-a8e8-e2c72d34b0d4
+            key: n/a
+            system: 'https://example.com/mr'
+            type:
+              type: INTERNAL
+      properties:
+        id:
+          type: string
+          x-stoplight:
+            id: vsheo3ghrojnj
+        key:
+          type: string
+          x-stoplight:
+            id: l9qfexvwfabf2
+        system:
+          type: string
+          x-stoplight:
+            id: p7dljxiunzjm8
+        type:
+          $ref: '#/components/schemas/identifierSystemType'
+        tenantId:
+          type: string
+          x-stoplight:
+            id: m3q0yjxqep5q7
+        internalidentifierSystem:
+          $ref: '#/components/schemas/identifierSystem'
+      required:
+        - id
+        - key
+        - system
+        - type
+    identifierSystemType:
+      type: object
+      x-stoplight:
+        id: rkcg115842rwb
+      x-internal: false
+      title: identifierSystemType
+      properties:
+        type:
+          type: string
+          x-stoplight:
+            id: vlqatmi9x800n
+          enum:
+            - INTERNAL
+            - EXTERNAL
+      required:
+        - type
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
